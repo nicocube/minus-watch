@@ -1,0 +1,25 @@
+{
+  "name": "minus-watch",
+  "version": "0.0.0",
+  "description": "A bootstrap utility that watches your code, working dir, and given additional paths, and reload everything when something changes",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nicocube/minus-watch.git"
+  },
+  "keywords": [
+    "watch"
+  ],
+  "author": "Nicolas Lochet",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/nicocube/minus-watch/issues"
+  },
+  "homepage": "https://github.com/nicocube/minus-watch#readme",
+  "dependencies": {
+    "minimist": "^1.2.0"
+  }
+}
