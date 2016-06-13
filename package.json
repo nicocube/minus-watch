@@ -1,6 +1,6 @@
 {
   "name": "minus-watch",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A bootstrap utility that watches your code, working dir, and given additional paths, and reload everything when something changes",
   "main": "index.js",
   "scripts": {
@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/nicocube/minus-watch#readme",
   "dependencies": {
+    "chalk": "^1.1.3",
     "minimist": "^1.2.0"
   }
 }

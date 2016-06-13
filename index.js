@@ -10,6 +10,7 @@
  */
 
 var fs = require('fs')
+  , chalk = require('chalk')
   , options
   , watched = []
 
@@ -28,6 +29,7 @@ function minusWatch(opt) {
 
   var defaultOptions = {
     flags: ['w', 'watch'],
+    stackTraceFlags : ['S', 'stacktrace'],
     msg: '---\n'
   }
   Object.keys(defaultOptions).forEach(function(k) {
@@ -38,14 +40,15 @@ function minusWatch(opt) {
 
   var argv = require('minimist')(process.argv.slice(2))
   
-  if (! options.flags.some(function (k) { return argv[k] })) {
+  options.isWatching = options.flags.some(function (k) { return argv[k] })
+  options.isPrintStackTrace = options.stackTraceFlags.some(function (k) { return argv[k] })
+    
+  if (! options.isWatching) {
     require(options.run)()
   } else {
-    console.log('Watch !')
     var keys = Object.keys(require.cache)
     
     run()
-    prompt_for_reload()
     
     Object.keys(require.cache)
     .filter(not(RegExp.prototype.test.bind(/node_modules/)))
@@ -60,7 +63,6 @@ function minusWatch(opt) {
       if (chunk==='q' || chunk==='\u0003') process.exit(0)
       if (chunk==='r') {
         run()
-        prompt_for_reload()
       }
     })
     process.stdin.on('end', function () {
@@ -73,11 +75,14 @@ function minusWatch(opt) {
 }
 
 function run() {
-  require(options.run)()
-}
-
-function prompt_for_reload() {
-  process.stdout.write(options.msg+'\n')
+  try {
+    require(options.run)()
+    process.stdout.write(options.msg+'\n')
+  } catch(e) {
+    if (!options.isPrintStackTrace) process.stderr.write(chalk.magenta('ERROR:'+e.message+'\n'))
+    else process.stderr.write(chalk.magenta(e.stack+'\n'))
+    process.stdout.write(options.msg+'\n')
+  }
 }
 
 function not(f) {
@@ -95,22 +100,17 @@ function add(l) {
 }
 
 function register(filename){
-  fs.watchFile(filename,
-  { interval: 1000 },  
-  function() {
-    process.stdout.write('\nUpdate found on '+filename+'\n')
-    if (typeof filename === 'string' && filename in require.cache) {
-      delete require.cache[filename]
-    }
-    try {
+  fs.watchFile(
+    filename,
+    { interval: 1000 },  
+    function() {
+      process.stdout.write(chalk.inverse('\nUpdate found on '+filename+'\n'))
+      if (typeof filename === 'string' && filename in require.cache) {
+        delete require.cache[filename]
+      }
       run()
-      prompt_for_reload()
-    } catch(e) {
-      if (!for_reload.isPrintStackTrace) process.stderr.write(chalk.magenta('ERROR:'+e.message+'\n'))
-      else process.stderr.write(chalk.magenta(e.stack+'\n'))
-      prompt_for_reload()
     }
-  })
+  )
 }
 
 minusWatch.add = add
