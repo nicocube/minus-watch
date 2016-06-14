@@ -1,4 +1,5 @@
-# minus-watch
+# minus-watch [![NPM version][npm-image]][npm-url]
+
 Watch, run, auto-reload, enjoy !
 
 A bootstrap utility that watches your code, working dir, and given additional paths, and reload everything when something changes.
@@ -11,3 +12,7 @@ Synopsis:
       run: __dirname+'/app',
       msg: require('chalk').gray('\nWait for change on files. r to reload, q to quit\n')
     })
+
+
+[npm-url]: https://npmjs.org/package/minus-watch
+[npm-image]: https://badge.fury.io/js/minus-watch.png
